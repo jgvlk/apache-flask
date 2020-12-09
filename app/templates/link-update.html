@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>myplaid - Reenter Credentials</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <style>
+        html body {
+            font-family: "Raleway";
+        }
+
+        .jv-outline-element {
+            margin: auto;
+            border: 3px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body onload="getInstitutions()" style="background-color: #EFF8FC;">
+    <h1>Link Update Flow</h1>
+    <div>
+        <ul style="font-size: smaller;">
+            <li>Select institution to launch Plaid Link in update mode</li>
+            <li>Btn click -> send institution name to app, pass access token to server</li>
+            <li>Get link token back and launch link</li>
+        </ul>
+    </div>
+    <div>
+        <div>
+            <form>
+                <label for="institution-choose"></label>
+                <select id="institution-choose" name="institution-choose">
+                    <option>Select institution...</option>
+                </select>
+            </form>
+        </div>
+        <div>
+            <button id="launch-link-update">Launch Link</button>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <a href="/">Home</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+    <script type="text/javascript">
+        const chooseInstitution = document.querySelector('select');
+        const btnLaunchLink = document.querySelector('button')
+        const form = document.querySelector('form')
+
+        function getInstitutions() {
+            const request = new XMLHttpRequest();
+
+            fetch('https://localhost:8443/api/institutions')
+                .then(response => response.json())
+                .then(function (data) {
+                    var institutionResponse = JSON.parse(data);
+                    const institutions = institutionResponse.institutions;
+
+                    for (let i = 0; i < institutions.length; i++) {
+                        const selectOption = document.createElement('option');
+                        selectOption.value = institutions[i].InstitutionName;
+                        selectOption.textContent = institutions[i].InstitutionName;
+                        chooseInstitution.appendChild(selectOption);
+                    }
+                })
+                .catch(function (err) {
+                    console.log('Fetch problem: ' + err.message);
+                });
+        };
+
+        btnLaunchLink.onclick = async function () {
+            let institution_name = chooseInstitution.value;
+            let selected = {
+                institution_name: institution_name
+            };
+
+            let response = await fetch('https://localhost:8443/api/updateLinkToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(selected)
+            });
+
+            let token = await response.json();
+
+            var createHandler = Plaid.create({
+                token: await token,
+                onSuccess: function (public_token, metadata) {
+                    console.log('public_token: ' + public_token);
+                    console.log(metadata);
+                },
+                onExit: function (err, metadata) {
+                    if (err != null) {
+                        console.log('error' + err);
+                    }
+                }
+            });
+
+            createHandler.open();
+        };
+    </script>
+</body>
+
+</html>
