@@ -1,7 +1,55 @@
-{% extends "layout.html" %}
-{% block content %}
-  <div class="jumbo">
-    <h2>Welcome to the Flask app<h2>
-    <h3>This is the home page for the Flask app<h3>
-  </div>
-{% endblock %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>myplaid</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html body {
+            font-family: "Raleway" !important;
+        }
+
+        .jv-outline-element {
+            margin: auto;
+            border: 3px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body style="background-color: #EFF8FC;">
+    <!-- Sidebar/menu -->
+    <div>
+        <nav class="w3-sidebar" style="width:200px; background-color: #381A0A;" id="mySidebar">
+            <div class="w3-bar-block w3-center"
+                style="color: #EFF8FC; background-color: #3884A3; height: 35px; font-size: larger;">
+                My Finances
+            </div>
+            <div class="w3-bar-block" style="color: #EFF8FC">
+                <a href="#" class="w3-bar-item w3-button" style="font-size: smaller;"><i class="fa fa-users fa-fw"></i> 
+                    Home</a>
+                <a href="/accounts/create" class="w3-bar-item w3-button" style="font-size: smaller;"><i
+                        class="fa fa-bank fa-fw"></i>  Accounts -
+                    Add</a>
+                <a href="/accounts/update" class="w3-bar-item w3-button" style="font-size: smaller;"><i
+                        class="fa fa-bank fa-fw"></i>  Accounts -
+                    Update</a>
+            </div>
+        </nav>
+        <div style="color: #381A0A; position: fixed; left: 210px;">
+            It works!
+        </div>
+    </div>
+
+    <!-- !PAGE CONTENT! -->
+
+</body>
+
+</html>
